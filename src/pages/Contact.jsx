@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import emailjs from '@emailjs/browser';
 import Footer from '../components/Footer';
+import { trackFormSubmit } from '../utils/analytics';
 
 const Contact = () => {
   const navigate = useNavigate();
@@ -66,6 +67,9 @@ const Contact = () => {
       setIsSubmitting(false);
       setIsSubmitted(true);
       setFormData({ name: '', email: '', message: '' });
+      
+      // Track form submission
+      trackFormSubmit('contact_form');
       
       setTimeout(() => {
         setIsSubmitted(false);

@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Footer from '../components/Footer';
+import { trackProjectView } from '../utils/analytics';
 
 const ProjectDetails = () => {
   const { id } = useParams();
@@ -131,7 +132,10 @@ const ProjectDetails = () => {
 
   useEffect(() => {
     if (projectsData[id]) {
-      setProject(projectsData[id]);
+      const projectData = projectsData[id];
+      setProject(projectData);
+      // Track project view
+      trackProjectView(projectData.title);
     } else {
       navigate('/portfolio');
     }
