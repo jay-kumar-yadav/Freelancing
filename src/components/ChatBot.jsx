@@ -8,7 +8,7 @@ const ChatBot = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Hello! 👋 I'm your AI assistant. How can I help you today?",
+      text: "Hey! 👋 I'm Jay. How can I help you today? Feel free to ask me anything about website development, mobile apps, UI/UX design, student projects, pricing, or any other services I offer!",
       sender: 'bot',
       timestamp: new Date()
     }
@@ -28,7 +28,7 @@ const ChatBot = () => {
 
     // Greetings
     if (message.match(/^(hi|hello|hey|greetings|good morning|good afternoon|good evening)/)) {
-      return "Hello! 👋 Nice to meet you! I'm here to help you learn more about Jay Kumar Yadav's services and portfolio. What would you like to know?";
+      return "Hey! 👋 I'm Jay. Nice to meet you! I'm here to help you with website development, mobile apps, UI/UX design, student projects, pricing, or any other services. What would you like to know?";
     }
 
     // About/Services
@@ -41,14 +41,28 @@ const ChatBot = () => {
       }
     }
 
-    // Pricing
-    if (message.match(/(price|cost|pricing|how much|budget|fee|charge)/)) {
+    // Pricing (check for student project pricing first)
+    if (message.match(/(price|cost|pricing|how much|budget|fee|charge|rate)/)) {
+      // If asking about student project pricing
+      if (message.match(/(student|final year|bca|mca|b\.tech|m\.tech|college project|academic|thesis|dissertation|fyp|final year project)/)) {
+        return "Student project pricing starts from **₹3,999** and depends on the intensity and complexity of your project! 💰\n\n**Factors that affect pricing:**\n• Project type (Web, Mobile, Desktop, ML/AI, Blockchain)\n• Complexity and features required\n• Technology stack\n• Timeline and urgency\n• Documentation requirements\n\n**What's included:**\n✅ Complete source code\n✅ Full documentation\n✅ Project report\n✅ Deployment support\n✅ Viva preparation help\n\nFor a detailed quote, I'd need to know more about your project requirements. Would you like to discuss your project or visit the Students Project page?";
+      }
+      // General pricing
       return "I offer flexible pricing plans:\n\n💰 **Starter** - ₹24,999 per project\n💼 **Professional** - ₹79,999 per project\n🏢 **Enterprise** - Custom quote\n\nWould you like to see detailed pricing? I can take you to the pricing page!";
     }
 
     // Contact
     if (message.match(/(contact|reach|email|phone|get in touch|connect|call)/)) {
       return "You can reach out through:\n\n📧 Email: jay94588@gmail.com\n📞 Phone: +91 9097088427\n💬 Contact Form: Available on the Contact page\n\nWould you like me to take you to the contact page?";
+    }
+
+    // Student Projects
+    if (message.match(/(student|final year|bca|mca|b\.tech|m\.tech|college project|academic|thesis|dissertation|fyp|final year project)/)) {
+      // Check if asking about pricing
+      if (message.match(/(price|cost|pricing|how much|budget|fee|charge|rate)/)) {
+        return "Student project pricing starts from **₹3,999** and depends on the intensity and complexity of your project! 💰\n\n**Factors that affect pricing:**\n• Project type (Web, Mobile, Desktop, ML/AI, Blockchain)\n• Complexity and features required\n• Technology stack\n• Timeline and urgency\n• Documentation requirements\n\n**What's included:**\n✅ Complete source code\n✅ Full documentation\n✅ Project report\n✅ Deployment support\n✅ Viva preparation help\n\nFor a detailed quote, I'd need to know more about your project requirements. Would you like to discuss your project or visit the Students Project page?";
+      }
+      return "I help students with their final year projects! 🎓\n\nI offer professional project development for:\n• MCA (Master of Computer Applications)\n• BCA (Bachelor of Computer Applications)\n• B.Tech (Computer Science/IT)\n• M.Tech (Computer Science/IT)\n\n**Project Types:**\n🌐 Web Development\n📱 Mobile App Development\n🖥️ Desktop Applications\n🤖 Machine Learning & AI\n⛓️ Blockchain & Cryptocurrency\n\n**Benefits:**\n✅ Affordable student-friendly pricing (Starting from ₹3,999)\n✅ Complete documentation\n✅ Source code delivery\n✅ 24/7 support\n✅ On-time delivery\n\nWould you like to know more about student projects? I can take you to the Students Project page!";
     }
 
     // Projects/Portfolio
@@ -78,11 +92,15 @@ const ChatBot = () => {
 
     // Help
     if (message.match(/(help|how can|what can|assist|support)/)) {
-      return "I can help you with:\n\n✅ Information about services\n✅ Pricing details\n✅ Project portfolio\n✅ Contact information\n✅ Technical expertise\n\nJust ask me anything!";
+      return "I can help you with:\n\n✅ Website development services\n✅ Mobile app development\n✅ UI/UX design\n✅ Student final year projects (BCA, MCA, B.Tech, M.Tech)\n✅ Pricing details\n✅ Project portfolio\n✅ Contact information\n✅ Technical expertise\n\nJust ask me anything related to web development, mobile apps, or student projects!";
     }
 
     // Navigation requests
     if (message.match(/(show|take|go|navigate|open|visit|see)/)) {
+      if (message.match(/(student|final year|bca|mca|b\.tech|m\.tech|college project|academic)/)) {
+        setTimeout(() => navigate('/students-project'), 500);
+        return "Taking you to the Students Project page! 🎓";
+      }
       if (message.match(/(project|portfolio|work)/)) {
         setTimeout(() => navigate('/projects'), 500);
         return "Taking you to the projects page! 🚀";
@@ -103,10 +121,10 @@ const ChatBot = () => {
 
     // Default responses
     const defaultResponses = [
-      "That's an interesting question! Could you rephrase it? I can help you with information about services, pricing, projects, or contact details.",
-      "I'm here to help! You can ask me about services, pricing, projects, or how to get in touch. What would you like to know?",
-      "Let me help you with that! You can ask about:\n- Services offered\n- Pricing plans\n- Portfolio projects\n- Contact information\n\nWhat interests you most?",
-      "I'd be happy to help! Try asking about services, pricing, projects, or contact information. What can I assist you with?"
+      "That's an interesting question! I'm Jay, and I can help you with website development, mobile apps, UI/UX design, student projects, pricing, or contact information. Could you rephrase your question?",
+      "I'm here to help! I'm Jay, and I specialize in website development, mobile apps, UI/UX design, and student final year projects. What would you like to know?",
+      "Let me help you with that! I'm Jay. You can ask me about:\n- Website development services\n- Mobile app development\n- UI/UX design\n- Student final year projects (BCA, MCA, B.Tech, M.Tech)\n- Pricing plans\n- Portfolio projects\n- Contact information\n\nWhat interests you most?",
+      "I'd be happy to help! I'm Jay. Try asking about website development, mobile apps, student projects, services, pricing, or contact information. What can I assist you with?"
     ];
 
     return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
@@ -153,6 +171,7 @@ const ChatBot = () => {
       services: "What services do you offer?",
       pricing: "What are your pricing plans?",
       projects: "Show me your projects",
+      'student-project': "Tell me about student projects",
       contact: "How can I contact you?"
     };
 
@@ -265,7 +284,7 @@ const ChatBot = () => {
               <div className="px-4 py-2 border-t border-gray-800 bg-netflix-dark">
                 <p className="text-xs text-gray-400 mb-2">Quick actions:</p>
                 <div className="flex flex-wrap gap-2">
-                  {['services', 'pricing', 'projects', 'contact'].map((action) => (
+                  {['services', 'pricing', 'projects', 'student-project', 'contact'].map((action) => (
                     <motion.button
                       key={action}
                       onClick={() => handleQuickAction(action)}
@@ -273,7 +292,7 @@ const ChatBot = () => {
                       whileTap={{ scale: 0.95 }}
                       className="px-3 py-1 bg-netflix-black text-gray-300 text-xs rounded-full border border-gray-700 hover:border-netflix-red hover:text-netflix-red transition-colors capitalize"
                     >
-                      {action}
+                      {action === 'student-project' ? 'Student Project' : action}
                     </motion.button>
                   ))}
                 </div>

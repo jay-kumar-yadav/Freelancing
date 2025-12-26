@@ -560,6 +560,125 @@ const StudentsProject = () => {
           </div>
         </section>
 
+        {/* Pricing Section */}
+        <section className="py-20 px-4 sm:px-6 lg:px-8 bg-netflix-dark/50">
+          <div className="max-w-7xl mx-auto">
+            <motion.h2
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="text-4xl md:text-5xl font-bold text-white text-center mb-4"
+            >
+              Pricing
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-xl text-gray-400 text-center mb-12 max-w-3xl mx-auto"
+            >
+              Affordable pricing tailored for students
+            </motion.p>
+
+            <div className="max-w-4xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="bg-netflix-dark rounded-lg p-8 md:p-12 border border-gray-800"
+              >
+                <div className="text-center mb-8">
+                  <p className="text-2xl md:text-3xl text-white mb-2">
+                    Student project pricing starts from <span className="text-netflix-red font-bold text-3xl md:text-4xl">₹3,999</span>
+                  </p>
+                  <p className="text-lg text-gray-300 mt-4">
+                    Pricing depends on the intensity and complexity of your project! 💰
+                  </p>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-8 mb-8">
+                  {/* Factors Section */}
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-4">Factors that affect pricing:</h3>
+                    <ul className="space-y-3">
+                      <li className="flex items-start">
+                        <span className="text-netflix-red mr-3 mt-1">•</span>
+                        <span className="text-gray-300">Project type (Web, Mobile, Desktop, ML/AI, Blockchain)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-netflix-red mr-3 mt-1">•</span>
+                        <span className="text-gray-300">Complexity and features required</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-netflix-red mr-3 mt-1">•</span>
+                        <span className="text-gray-300">Technology stack</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-netflix-red mr-3 mt-1">•</span>
+                        <span className="text-gray-300">Timeline and urgency</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-netflix-red mr-3 mt-1">•</span>
+                        <span className="text-gray-300">Documentation requirements</span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* What's Included Section */}
+                  <div>
+                    <h3 className="text-xl font-bold text-white mb-4">What's included:</h3>
+                    <ul className="space-y-3">
+                      <li className="flex items-start">
+                        <span className="text-netflix-red mr-3 mt-1">✅</span>
+                        <span className="text-gray-300">Complete source code</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-netflix-red mr-3 mt-1">✅</span>
+                        <span className="text-gray-300">Full documentation</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-netflix-red mr-3 mt-1">✅</span>
+                        <span className="text-gray-300">Project report</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-netflix-red mr-3 mt-1">✅</span>
+                        <span className="text-gray-300">Deployment support</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-netflix-red mr-3 mt-1">✅</span>
+                        <span className="text-gray-300">Viva preparation help</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                  className="text-center bg-gradient-to-r from-netflix-red/20 to-red-600/20 rounded-lg p-6 border border-netflix-red/30"
+                >
+                  <p className="text-gray-300 mb-4">
+                    For a detailed quote, I'd need to know more about your project requirements.
+                  </p>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => navigate('/contact')}
+                    className="px-8 py-3 bg-netflix-red text-white font-semibold rounded-md hover:bg-red-700 transition-colors duration-300 shadow-lg"
+                  >
+                    Get Your Custom Quote
+                  </motion.button>
+                </motion.div>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
         {/* Testimonials Section */}
         <section className="py-20 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
