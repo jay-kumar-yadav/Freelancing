@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion';
-import { useInView } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { gsap } from 'gsap';
 
 const OurSolutionsSection = () => {
   const navigate = useNavigate();
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const sectionRef = useRef(null);
+  const solutionCardsRef = useRef([]);
   const [hoveredSolution, setHoveredSolution] = useState(null);
 
   const solutions = [
@@ -40,34 +40,76 @@ const OurSolutionsSection = () => {
     }
   ];
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.15
-      }
-    }
-  };
+  // GSAP Cinematic Animation - Solutions falling from sky
+  useEffect(() => {
+    const cards = solutionCardsRef.current.filter(Boolean);
+    
+    if (cards.length === 0) return;
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.6,
-        ease: [0.22, 1, 0.36, 1]
-      }
-    }
-  };
+    // Set initial state for all cards
+    cards.forEach((card, index) => {
+      const randomY = -(400 + Math.random() * 400); // Random Y between -400 and -800
+      const randomScale = 0.7 + Math.random() * 0.2; // Scale between 0.7 and 0.9
+      const randomRotation = -20 + Math.random() * 40; // Slight 3D rotation for depth
+      
+      gsap.set(card, {
+        opacity: 0,
+        y: randomY,
+        scale: randomScale,
+        rotationX: randomRotation,
+        transformOrigin: "center center",
+      });
+    });
+
+    // Create master timeline
+    const tl = gsap.timeline({
+      delay: 0.3, // Reduced delay after section comes into view
+    });
+
+    // Animate each card falling down with stagger
+    cards.forEach((card, index) => {
+      const staggerDelay = index * 0.1; // Reduced stagger delay to 0.1s between each card
+      
+      // Main falling animation
+      tl.to(card, {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        rotationX: 0,
+        duration: 1.0, // Reduced duration to 1.0s
+        ease: "power3.out",
+      }, staggerDelay);
+
+      // Subtle bounce/settle effect - bounce up slightly
+      tl.to(card, {
+        y: -8,
+        duration: 0.2, // Reduced to 0.2s
+        ease: "power2.out",
+      }, staggerDelay + 1.0);
+      
+      // Settle back down
+      tl.to(card, {
+        y: 0,
+        duration: 0.3, // Reduced to 0.3s
+        ease: "expo.out",
+      }, staggerDelay + 1.2);
+    });
+
+    // Cleanup
+    return () => {
+      tl.kill();
+      cards.forEach(card => {
+        gsap.killTweensOf(card);
+      });
+    };
+  }, []);
 
   return (
-    <section ref={ref} className="py-20 px-4 sm:px-6 lg:px-8 bg-netflix-dark">
+    <section ref={sectionRef} className="py-20 px-4 sm:px-6 lg:px-8 bg-netflix-dark">
       <div className="max-w-7xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           className="text-center mb-12"
         >
@@ -79,20 +121,21 @@ const OurSolutionsSection = () => {
           </p>
         </motion.div>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
-        >
-          {solutions.map((solution) => (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          {solutions.map((solution, index) => (
             <motion.div
               key={solution.id}
-              variants={itemVariants}
+              ref={(el) => {
+                if (el) solutionCardsRef.current[index] = el;
+              }}
               whileHover={{ scale: 1.05 }}
               onHoverStart={() => setHoveredSolution(solution.id)}
               onHoverEnd={() => setHoveredSolution(null)}
               className="aspect-square bg-netflix-black rounded-lg p-4 border border-gray-800 hover:border-netflix-red transition-all duration-300 relative group overflow-hidden flex flex-col items-center justify-between"
+              style={{ 
+                transformStyle: 'preserve-3d',
+                willChange: 'transform'
+              }}
             >
               {/* Red Blur Overlay on Hover */}
               {hoveredSolution === solution.id && (
@@ -131,13 +174,13 @@ const OurSolutionsSection = () => {
               </motion.button>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
 
         {/* CTA Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.8 }}
           className="text-center mt-12"
         >
           <motion.button

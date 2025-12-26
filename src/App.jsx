@@ -7,6 +7,7 @@ import ProjectDetails from './pages/ProjectDetails';
 import Contact from './pages/Contact';
 import Services from './pages/Services';
 import Pricing from './pages/Pricing';
+import StudentsProject from './pages/StudentsProject';
 import ChatBot from './components/ChatBot';
 import { trackPageView } from './utils/analytics';
 
@@ -33,6 +34,7 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/services" element={<Services />} />
         <Route path="/pricing" element={<Pricing />} />
+        <Route path="/students-project" element={<StudentsProject />} />
       </Routes>
       <ChatBot />
     </Router>

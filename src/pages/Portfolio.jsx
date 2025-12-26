@@ -100,6 +100,12 @@ const Portfolio = () => {
                 Pricing
               </button>
               <button
+                onClick={() => navigate('/students-project')}
+                className="text-gray-300 hover:text-white transition-colors font-bold uppercase tracking-wide"
+              >
+                Students Project
+              </button>
+              <button
                 onClick={() => navigate('/contact')}
                 className="text-gray-300 hover:text-white transition-colors font-bold uppercase tracking-wide"
               >
@@ -166,6 +172,15 @@ const Portfolio = () => {
                     className="block w-full text-left text-gray-300 hover:text-white transition-colors py-2 font-bold uppercase tracking-wide"
                   >
                     Pricing
+                  </button>
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      navigate('/students-project');
+                    }}
+                    className="block w-full text-left text-gray-300 hover:text-white transition-colors py-2 font-bold uppercase tracking-wide"
+                  >
+                    Students Project
                   </button>
                   <button
                     onClick={() => {

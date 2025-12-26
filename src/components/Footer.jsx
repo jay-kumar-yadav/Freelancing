@@ -52,6 +52,12 @@ const Footer = () => {
               >
                 UI/UX Design
               </button>
+              <button
+                onClick={() => navigate('/students-project')}
+                className="block text-gray-400 hover:text-netflix-red transition-colors text-left"
+              >
+                Students Project
+              </button>
             </div>
             <div>
               <h4 className="text-white font-semibold mb-3">Follow Us</h4>
