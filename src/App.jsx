@@ -7,6 +7,7 @@ import ProjectDetails from './pages/ProjectDetails';
 import Contact from './pages/Contact';
 import Services from './pages/Services';
 import Pricing from './pages/Pricing';
+import ChatBot from './components/ChatBot';
 import { trackPageView } from './utils/analytics';
 
 // Component to track page views on route changes
@@ -33,6 +34,7 @@ function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/pricing" element={<Pricing />} />
       </Routes>
+      <ChatBot />
     </Router>
   );
 }
