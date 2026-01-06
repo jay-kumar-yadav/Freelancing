@@ -9,6 +9,7 @@ import Services from './pages/Services';
 import Pricing from './pages/Pricing';
 import StudentsProject from './pages/StudentsProject';
 import ChatBot from './components/ChatBot';
+import WhatsAppButton from './components/WhatsAppButton';
 import { trackPageView } from './utils/analytics';
 
 // Component to track page views on route changes
@@ -37,6 +38,7 @@ function App() {
         <Route path="/students-project" element={<StudentsProject />} />
       </Routes>
       <ChatBot />
+      <WhatsAppButton />
     </Router>
   );
 }
