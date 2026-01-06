@@ -198,6 +198,20 @@ const Contact = () => {
               className="lg:col-span-2"
             >
               <div className="bg-netflix-dark rounded-lg p-8 border border-gray-800">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.1, duration: 0.6 }}
+                  className="mb-8"
+                >
+                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 flex items-center gap-3">
+                    <span>🚀</span>
+                    <span>Let's Build Something Powerful</span>
+                  </h2>
+                  <p className="text-lg text-gray-400">
+                    Fill the form below or message me on WhatsApp for faster response.
+                  </p>
+                </motion.div>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <label htmlFor="name" className="block text-gray-300 mb-2 font-semibold">

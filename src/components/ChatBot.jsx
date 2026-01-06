@@ -1,14 +1,16 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import emailjs from '@emailjs/browser';
 import { trackEvent } from '../utils/analytics';
 
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [conversationStep, setConversationStep] = useState(0); // Track conversation flow: 0=initial, 1=got reply, 2=shown pricing, 3=shown CTA
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Hey! 👋 I'm Jay. How can I help you today? Feel free to ask me anything about website development, mobile apps, UI/UX design, student projects, pricing, or any other services I offer!",
+      text: "👋 Hi! Welcome to my portfolio.\n\nI design and develop professional business websites and full-stack web applications that are fast, responsive, and SEO-optimized.\n\nTo help you faster, please tell me:\n1️⃣ Type of website\n2️⃣ Budget range\n3️⃣ Timeline",
       sender: 'bot',
       timestamp: new Date()
     }
@@ -17,17 +19,63 @@ const ChatBot = () => {
   const messagesEndRef = useRef(null);
   const navigate = useNavigate();
 
+  // EmailJS Configuration for chatbot notifications
+  const EMAILJS_SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || 'YOUR_SERVICE_ID';
+  const EMAILJS_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID || 'YOUR_TEMPLATE_ID';
+  const EMAILJS_PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || 'YOUR_PUBLIC_KEY';
+  
+  // Create a separate template ID for chatbot notifications (you'll need to create this in EmailJS)
+  const CHATBOT_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_CHATBOT_TEMPLATE_ID || EMAILJS_TEMPLATE_ID;
+
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Check if client provided proper details
+  const hasProperDetails = (message) => {
+    const lowerMessage = message.toLowerCase();
+    // Check for type of website
+    const hasType = lowerMessage.match(/(website|web app|ecommerce|business|portfolio|blog|landing page|full.?stack|admin panel|dashboard|application|app)/);
+    // Check for budget
+    const hasBudget = lowerMessage.match(/(budget|₹|rs|rupee|price|cost|pricing|10,?000|20,?000|30,?000|40,?000|50,?000|thousand|lakh)/);
+    // Check for timeline
+    const hasTimeline = lowerMessage.match(/(timeline|time|days|weeks|month|delivery|when|how long|duration|deadline)/);
+    
+    return hasType && (hasBudget || hasTimeline);
+  };
+
+  // Check if client is unsure about budget
+  const isUnsureAboutBudget = (message) => {
+    const lowerMessage = message.toLowerCase();
+    return lowerMessage.match(/(not sure|unsure|don't know|don't have|no idea|not clear|confused|help|guide|suggest|recommend).*(budget|price|cost|pricing|how much)/);
+  };
+
+
   // Simple AI response logic
   const getBotResponse = (userMessage) => {
     const message = userMessage.toLowerCase().trim();
 
-    // Greetings
-    if (message.match(/^(hi|hello|hey|greetings|good morning|good afternoon|good evening)/)) {
+    // Handle conversation flow for client conversion
+    if (conversationStep === 0) {
+      // First reply after welcome message
+      if (hasProperDetails(userMessage)) {
+        // Client gave proper details - Message 2a
+        setConversationStep(1);
+        return "Perfect 👍 Thanks for sharing the details.\n\nBased on your requirements, I can build a modern, fully responsive and SEO-friendly website tailored to your business needs.\n\nI'll review your requirements and get back to you shortly with the best solution.";
+      } else if (isUnsureAboutBudget(userMessage)) {
+        // Client unsure about budget - Message 2b
+        setConversationStep(1);
+        return "No worries 👍 I can guide you.\n\nCould you please tell me:\n• Is this for a business or personal use?\n• How many pages do you need?\n• Do you have any reference websites?\n\nBased on this, I'll suggest the best plan.";
+      } else {
+        // Client didn't provide clear details
+        setConversationStep(1);
+        return "Thanks for your message! 👍\n\nTo provide you with the best solution, could you please share:\n1️⃣ Type of website (business, ecommerce, portfolio, etc.)\n2️⃣ Budget range (if you have one)\n3️⃣ Timeline (when you need it)\n\nThis will help me give you a tailored quote!";
+      }
+    }
+
+    // Greetings (only if not in conversion flow)
+    if (conversationStep === 0 && message.match(/^(hi|hello|hey|greetings|good morning|good afternoon|good evening)/)) {
       return "Hey! 👋 I'm Jay. Nice to meet you! I'm here to help you with website development, mobile apps, UI/UX design, student projects, pricing, or any other services. What would you like to know?";
     }
 
@@ -47,8 +95,31 @@ const ChatBot = () => {
       if (message.match(/(student|final year|bca|mca|b\.tech|m\.tech|college project|academic|thesis|dissertation|fyp|final year project)/)) {
         return "Student project pricing starts from **₹3,999** and depends on the intensity and complexity of your project! 💰\n\n**Factors that affect pricing:**\n• Project type (Web, Mobile, Desktop, ML/AI, Blockchain)\n• Complexity and features required\n• Technology stack\n• Timeline and urgency\n• Documentation requirements\n\n**What's included:**\n✅ Complete source code\n✅ Full documentation\n✅ Project report\n✅ Deployment support\n✅ Viva preparation help\n\nFor a detailed quote, I'd need to know more about your project requirements. Would you like to discuss your project or visit the Students Project page?";
       }
-      // General pricing
-      return "I offer flexible pricing plans:\n\n💰 **Starter** - ₹24,999 per project\n💼 **Professional** - ₹79,999 per project\n🏢 **Enterprise** - Custom quote\n\nWould you like to see detailed pricing? I can take you to the pricing page!";
+      // General pricing - Show conversion message
+      if (conversationStep < 2) {
+        setConversationStep(2);
+        // Add CTA and trust messages after pricing
+        setTimeout(() => {
+          const ctaMessage = {
+            id: Date.now() + 100,
+            text: "If everything looks good, we can proceed further.\n\nYou can also message me directly on WhatsApp for faster discussion 👇\n💬 Chat on WhatsApp",
+            sender: 'bot',
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, ctaMessage]);
+        }, 2000);
+        
+        setTimeout(() => {
+          const trustMessage = {
+            id: Date.now() + 200,
+            text: "⏱ Average response time: 2–4 hours\n🚀 Delivery timeline: 5–7 days (for business websites)",
+            sender: 'bot',
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, trustMessage]);
+        }, 4000);
+      }
+      return "📌 Project pricing starts from ₹10,000 and depends on features, design, and functionality.\n\nAll websites include:\n✔ Mobile-friendly design\n✔ SEO-optimized structure\n✔ Fast loading performance\n✔ Clean & scalable code";
     }
 
     // Contact
@@ -130,6 +201,61 @@ const ChatBot = () => {
     return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
   };
 
+  // Send notification email when user sends a message
+  const sendChatbotNotification = async (userMessage, conversationContext) => {
+    // Only send notification if EmailJS is configured
+    if (EMAILJS_SERVICE_ID === 'YOUR_SERVICE_ID' || 
+        EMAILJS_TEMPLATE_ID === 'YOUR_TEMPLATE_ID' || 
+        EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY') {
+      console.log('EmailJS not configured for chatbot notifications');
+      return;
+    }
+
+    try {
+      // Get conversation summary (last 3 user messages)
+      const recentUserMessages = messages
+        .filter(msg => msg.sender === 'user')
+        .slice(-3)
+        .map(msg => msg.text)
+        .join(' | ');
+
+      // Extract potential contact info from message
+      const potentialEmail = userMessage.match(/[\w\.-]+@[\w\.-]+\.\w+/)?.[0] || '';
+      const potentialPhone = userMessage.match(/[\d\s\+\-\(\)]{10,}/)?.[0]?.trim() || '';
+
+      // Prepare email content
+      const emailParams = {
+        to_email: 'jay94588@gmail.com',
+        subject: '🤖 New Chatbot Message from Portfolio',
+        user_message: userMessage,
+        conversation_summary: recentUserMessages || 'First message',
+        conversation_step: conversationStep.toString(),
+        timestamp: new Date().toLocaleString('en-IN', { 
+          timeZone: 'Asia/Kolkata',
+          dateStyle: 'full',
+          timeStyle: 'long'
+        }),
+        page_url: window.location.href,
+        potential_email: potentialEmail || 'Not provided',
+        potential_phone: potentialPhone || 'Not provided',
+        message_count: (messages.filter(m => m.sender === 'user').length + 1).toString(),
+      };
+
+      // Send email notification
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        CHATBOT_TEMPLATE_ID,
+        emailParams,
+        EMAILJS_PUBLIC_KEY
+      );
+
+      console.log('Chatbot notification sent successfully');
+    } catch (error) {
+      console.error('Failed to send chatbot notification:', error);
+      // Don't show error to user, just log it silently
+    }
+  };
+
   const handleSendMessage = (e) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
@@ -141,7 +267,7 @@ const ChatBot = () => {
     });
 
     const userMessage = {
-      id: messages.length + 1,
+      id: Date.now(),
       text: inputValue,
       sender: 'user',
       timestamp: new Date()
@@ -151,15 +277,60 @@ const ChatBot = () => {
     const messageToProcess = inputValue;
     setInputValue('');
 
+    // Send notification email (async, don't wait for it)
+    sendChatbotNotification(messageToProcess, {
+      step: conversationStep,
+      messageCount: messages.length + 1
+    });
+
     // Simulate bot thinking
     setTimeout(() => {
+      const botResponseText = getBotResponse(messageToProcess);
       const botResponse = {
-        id: messages.length + 2,
-        text: getBotResponse(messageToProcess),
+        id: Date.now() + 1,
+        text: botResponseText,
         sender: 'bot',
         timestamp: new Date()
       };
       setMessages(prev => [...prev, botResponse]);
+
+      // Handle conversation flow - add follow-up messages
+      if (conversationStep === 1 && hasProperDetails(messageToProcess)) {
+        // Add pricing message after 2 seconds
+        setTimeout(() => {
+          const pricingMessage = {
+            id: Date.now() + 2,
+            text: "📌 Project pricing starts from ₹10,000 and depends on features, design, and functionality.\n\nAll websites include:\n✔ Mobile-friendly design\n✔ SEO-optimized structure\n✔ Fast loading performance\n✔ Clean & scalable code",
+            sender: 'bot',
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, pricingMessage]);
+          setConversationStep(2);
+        }, 2000);
+
+        // Add CTA message after 4 seconds
+        setTimeout(() => {
+          const ctaMessage = {
+            id: Date.now() + 3,
+            text: "If everything looks good, we can proceed further.\n\nYou can also message me directly on WhatsApp for faster discussion 👇\n💬 Chat on WhatsApp",
+            sender: 'bot',
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, ctaMessage]);
+          setConversationStep(3);
+        }, 4000);
+
+        // Add trust boost message after 6 seconds
+        setTimeout(() => {
+          const trustMessage = {
+            id: Date.now() + 4,
+            text: "⏱ Average response time: 2–4 hours\n🚀 Delivery timeline: 5–7 days (for business websites)",
+            sender: 'bot',
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, trustMessage]);
+        }, 6000);
+      }
     }, 500);
   };
 
@@ -263,7 +434,7 @@ const ChatBot = () => {
                   key={message.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'} flex-col`}
                 >
                   <div
                     className={`max-w-[80%] rounded-lg px-4 py-2 ${
@@ -274,6 +445,23 @@ const ChatBot = () => {
                   >
                     <p className="text-sm whitespace-pre-line">{message.text}</p>
                   </div>
+                  {/* WhatsApp button in bot messages that mention WhatsApp */}
+                  {message.sender === 'bot' && message.text.includes('WhatsApp') && (
+                    <motion.a
+                      href="https://wa.me/919097088427?text=Hi!%20I'm%20interested%20in%20your%20services."
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      className="mt-2 px-4 py-2 bg-[#25D366] text-white rounded-lg text-sm font-semibold flex items-center gap-2 w-fit"
+                      onClick={() => trackEvent('whatsapp_click', { source: 'chatbot' })}
+                    >
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+                      </svg>
+                      Chat on WhatsApp
+                    </motion.a>
+                  )}
                 </motion.div>
               ))}
               <div ref={messagesEndRef} />

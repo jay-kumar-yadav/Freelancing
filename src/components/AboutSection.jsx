@@ -27,16 +27,13 @@ const AboutSection = () => {
           className="max-w-3xl"
         >
           <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-6">
-            I help brands, startups, and businesses transform ideas into exceptional digital products. As a <span className="text-netflix-red font-semibold">Full-Stack Developer</span> and <span className="text-netflix-red font-semibold">UI/UX Designer</span>, I craft high-quality websites and mobile applications that balance aesthetic precision, performance, and scalability.
+            I design and develop modern business websites and full-stack web applications that are fast, responsive, and SEO-optimized.
           </p>
           <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-6">
-            My approach combines strategic design thinking with robust engineering. From intuitive user interfaces to clean, maintainable codebases, every project is built with purpose—focused on usability, speed, and long-term growth. I don't just create visuals or write code; I design experiences that engage users and drive results.
-          </p>
-          <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-6">
-            I deliver agency-level quality with focused, hands-on collaboration. By working closely with clients and understanding their vision, I translate ideas into refined digital solutions that feel premium, polished, and future-ready.
+            As a <span className="text-netflix-red font-semibold">Full-Stack Developer</span> and <span className="text-netflix-red font-semibold">UI/UX Designer</span>, I help businesses turn ideas into scalable digital products built with clean code, strong performance, and user-focused design. From frontend experience to backend logic, every solution is crafted to support long-term growth.
           </p>
           <p className="text-lg md:text-xl text-gray-300 leading-relaxed mb-8">
-            Whether it's a modern website, a thoughtfully designed UI/UX system, or a scalable mobile application, my goal is simple: build products that look exceptional, perform flawlessly, and elevate your brand's digital presence.
+            Projects start from <span className="text-netflix-red font-semibold">₹10,000</span>, based on scope and features.
           </p>
 
           {/* CTA Buttons */}

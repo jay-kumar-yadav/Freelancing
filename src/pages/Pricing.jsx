@@ -14,69 +14,60 @@ const Pricing = () => {
   const pricingPlans = [
     {
       id: 1,
-      name: 'Starter',
-      description: 'Perfect for small businesses and startups looking to establish their digital presence.',
-      price: '₹24,999',
+      name: 'BASIC',
+      description: 'Best for small businesses & personal brands',
+      price: '₹10,000',
       period: 'per project',
       color: 'from-blue-600 to-cyan-500',
+      delivery: '5–7 days delivery',
+      ideal: 'Ideal for local businesses, startups, portfolios',
       features: [
-        'Basic Web Development',
-        'Responsive Design',
-        'SEO Optimization',
-        'Social Media Integration',
-        'SSL Certificate',
-        'Contact Form Setup',
-        'Google Analytics',
-        'Testing & QA',
-        'Maintenance (1 Month)'
+        'Up to 5 pages (Home, About, Services, Contact, etc.)',
+        'Fully responsive (mobile + desktop)',
+        'SEO-friendly structure',
+        'Fast loading performance',
+        'Contact form integration',
+        '5–7 days delivery'
       ],
       popular: false
     },
     {
       id: 2,
-      name: 'Professional',
-      description: 'Ideal for growing businesses that need advanced features and functionality.',
-      price: '₹79,999',
+      name: 'STANDARD',
+      description: 'Most popular choice ⭐',
+      price: '₹20,000',
       period: 'per project',
       color: 'from-purple-600 to-pink-500',
+      delivery: '7–10 days delivery',
+      ideal: 'Ideal for growing businesses',
       features: [
-        'Advanced Web Application',
-        'Database Integration',
-        'User Authentication',
-        'Payment Gateway',
-        '2 Months Support',
-        'API Development',
-        'Admin Dashboard',
-        'Email Marketing Setup',
-        'Performance Optimization',
-        'Security Implementation',
-        'Testing & QA',
-        'Maintenance (3 Months)'
+        'Up to 8–10 pages',
+        'Custom UI/UX design',
+        'Advanced SEO setup',
+        'WhatsApp + contact form',
+        'Performance optimization',
+        'Deployment & basic support',
+        '7–10 days delivery'
       ],
       popular: true
     },
     {
       id: 3,
-      name: 'Enterprise',
-      description: 'Comprehensive solutions for large enterprises with complex requirements.',
-      price: 'Custom',
-      period: 'quote',
+      name: 'PREMIUM / FULL-STACK',
+      description: 'Custom web applications',
+      price: '₹30,000+',
+      period: 'starts from',
       color: 'from-orange-600 to-red-500',
+      delivery: 'Timeline depends on features',
+      ideal: 'Ideal for complex business needs',
       features: [
-        'Custom Enterprise Solution',
-        'AI/ML Integration',
-        'Cloud Infrastructure',
-        'Microservices Architecture',
-        '12 Months Support',
-        'DevOps Setup',
-        'Security Audit',
-        'Performance Monitoring',
-        'Dedicated Team',
-        'Training & Documentation',
-        '24/7 Priority Support',
-        'Scalability Planning',
-        'Testing & QA',
-        'Maintenance (12 Months)'
+        'Custom full-stack development',
+        'Authentication (login/signup)',
+        'Admin panel / dashboard',
+        'Database integration',
+        'Secure backend APIs',
+        'Scalable architecture',
+        'Timeline depends on features'
       ],
       popular: false
     }
@@ -214,7 +205,10 @@ const Pricing = () => {
                 <div className="relative z-10">
                   {/* Plan Name */}
                   <h2 className="text-3xl font-bold text-white mb-2">{plan.name}</h2>
-                  <p className="text-gray-400 mb-6 text-sm leading-relaxed">{plan.description}</p>
+                  <p className="text-gray-400 mb-2 text-sm leading-relaxed">{plan.description}</p>
+                  {plan.ideal && (
+                    <p className="text-netflix-red mb-6 text-xs font-semibold">👉 {plan.ideal}</p>
+                  )}
 
                   {/* Price */}
                   <div className="mb-6">
@@ -222,12 +216,10 @@ const Pricing = () => {
                       <span className={`text-4xl md:text-5xl font-bold bg-gradient-to-r ${plan.color} bg-clip-text text-transparent`}>
                         {plan.price}
                       </span>
-                      {plan.price !== 'Custom' && (
-                        <span className="text-gray-400 text-lg">/{plan.period}</span>
-                      )}
+                      <span className="text-gray-400 text-lg">/{plan.period}</span>
                     </div>
-                    {plan.price === 'Custom' && (
-                      <span className="text-gray-400 text-lg block mt-1">{plan.period}</span>
+                    {plan.delivery && (
+                      <p className="text-gray-500 text-sm mt-2">{plan.delivery}</p>
                     )}
                   </div>
 
@@ -249,7 +241,7 @@ const Pricing = () => {
                       onClick={() => navigate('/contact')}
                       className={`w-full py-3 bg-gradient-to-r ${plan.color} text-white font-semibold rounded-md hover:shadow-lg transition-all duration-300`}
                     >
-                      {plan.price === 'Custom' ? 'Contact Sales' : 'Get Started'}
+                      Get Started
                     </motion.button>
                     
                     <motion.button
@@ -356,7 +348,7 @@ const Pricing = () => {
               </div>
               <div className="bg-netflix-dark rounded-lg p-6 border border-gray-800">
                 <h3 className="text-xl font-semibold text-white mb-2">How long does development take?</h3>
-                <p className="text-gray-400">Timeline varies by plan complexity. Starter plans typically take 2-4 weeks, Professional 4-8 weeks, and Enterprise is custom.</p>
+                <p className="text-gray-400">BASIC plans take 5–7 days, STANDARD plans take 7–10 days, and PREMIUM/FULL-STACK timeline depends on features and complexity.</p>
               </div>
               <div className="bg-netflix-dark rounded-lg p-6 border border-gray-800">
                 <h3 className="text-xl font-semibold text-white mb-2">Do you provide ongoing support?</h3>
